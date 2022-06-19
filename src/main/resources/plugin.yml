@@ -1,0 +1,4 @@
+name: PulsedParty
+version: '${project.version}'
+main: fr.nebulo9.pulsedparty.PulsedParty
+api-version: 1.18
