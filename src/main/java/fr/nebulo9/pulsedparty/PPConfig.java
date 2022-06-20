@@ -56,6 +56,11 @@ public class PPConfig extends PLConfig {
         FileUtil.writeInfFile(homesFile,homes);
     }
 
+    public void saveAll() {
+        saveConfig();
+        saveHomes();
+    }
+
     public void addPrivilileged(UUID uuid) {
         ((List<String>)values.get("privileged")).add(uuid.toString());
         Home bedHome;
