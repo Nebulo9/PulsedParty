@@ -9,18 +9,19 @@ public final class PulsedParty extends JavaPlugin {
 
     public static final String MINECRAFT_VERSION = PulsarLib.MINECRAFT_VERSION;
 
-    private static PLConfig config;
+    private static PPConfig config;
 
     @Override
     public void onEnable() {
         PulsarLib.setPlugin(this);
         Message.logInfo(Message.build("Using PulsarLib ",PulsarLib.VERSION));
+        config = new PPConfig();
 
-
+        super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        config.saveAll();
     }
 }
