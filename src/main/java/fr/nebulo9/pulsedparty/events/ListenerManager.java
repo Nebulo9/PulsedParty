@@ -12,6 +12,7 @@ public class ListenerManager extends Manager {
     @Override
     public void register() {
         instance.getServer().getPluginManager().registerEvents(new PlayerListener((PulsedParty)instance),instance);
-
+        instance.getServer().getPluginManager().registerEvents(new MentionListener((PulsedParty)instance),instance);
+        instance.getServer().getPluginManager().registerEvents(new BedSpawnListener((PulsedParty) instance),instance);
     }
 }
