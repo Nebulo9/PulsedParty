@@ -28,6 +28,18 @@ public class PPConfig extends PLConfig {
         FileUtil.createFile(joinMessageFile);
     }
 
+    public Object getValue(String key,Object ... args) {
+        switch (key) {
+            case "privileged": {
+                if(args.length == 0) return null;
+                return ((List<String>)values.get(key)).contains(args[0]);
+            }
+            default: {
+                return values.get(key);
+            }
+        }
+    }
+
     @Override
     public HashMap<String,Object> setDefaultValues() {
         HashMap<String,Object> values = new HashMap<>();
@@ -35,6 +47,7 @@ public class PPConfig extends PLConfig {
         values.put("privileged", Arrays.asList(""));
         values.put("privilegedKeepInventory", true);
         values.put("homes",true);
+        values.put("privilegedDeathDrops",true);
         return values;
     }
 
@@ -80,6 +93,10 @@ public class PPConfig extends PLConfig {
         homes.remove(uuid.toString());
         saveConfig();
         saveHomes();
+    }
+
+    public boolean isPrivileged(Player player) {
+        return (boolean)getValue("privileged",player.getUniqueId().toString());
     }
 
     public void addHome(Player player, String name, Location location) {

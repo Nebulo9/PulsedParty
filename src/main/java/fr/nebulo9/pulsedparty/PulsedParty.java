@@ -24,4 +24,8 @@ public final class PulsedParty extends JavaPlugin {
     public void onDisable() {
         config.saveAll();
     }
+
+    public static PPConfig getPPConfig() {
+        return config;
+    }
 }
