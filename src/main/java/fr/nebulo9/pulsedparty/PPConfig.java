@@ -79,11 +79,13 @@ public class PPConfig extends PLConfig {
         Home bedHome;
         Location bedLocation = Bukkit.getOfflinePlayer(uuid).getBedSpawnLocation();
         if(!Objects.isNull(bedLocation)) {
-            bedHome = new Home("bed", SimplifiedLocation.simplify(bedLocation));
+            bedHome = new Home("bed", new SimplifiedLocation(bedLocation));
         } else {
-            bedHome = new Home("bed",SimplifiedLocation.simplify(Bukkit.getWorlds().get(0).getSpawnLocation()));
+            bedHome = new Home("bed",new SimplifiedLocation(Bukkit.getWorlds().get(0).getSpawnLocation()));
         }
-        homes.put(uuid.toString(),List.of(bedHome));
+        List<Home> homesList = new ArrayList<>();
+        homesList.add(bedHome);
+        homes.put(uuid.toString(),homesList);
         saveConfig();
         saveHomes();
     }
@@ -100,7 +102,7 @@ public class PPConfig extends PLConfig {
     }
 
     public void addHome(Player player, String name, Location location) {
-        homes.get(player.getUniqueId().toString()).add(new Home(name,SimplifiedLocation.simplify(location)));
+        homes.get(player.getUniqueId().toString()).add(new Home(name,new SimplifiedLocation(location)));
         saveHomes();
     }
 
