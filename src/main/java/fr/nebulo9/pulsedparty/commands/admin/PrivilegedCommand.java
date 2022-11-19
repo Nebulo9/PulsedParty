@@ -14,10 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class PrivilegedCommand extends PLCommand {
-    @Override
-    public boolean checkArg(String[] strings, int i, String s) {
-        return false;
-    }
 
     @Override
     public boolean PLExecute(CommandSender commandSender, Command command, String[] args) {
