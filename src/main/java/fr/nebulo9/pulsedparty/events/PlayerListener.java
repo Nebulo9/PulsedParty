@@ -4,6 +4,8 @@ import fr.nebulo9.pulsarlib.location.SimplifiedLocation;
 import fr.nebulo9.pulsarlib.message.Message;
 import fr.nebulo9.pulsedparty.PulsedParty;
 import fr.nebulo9.pulsedparty.player.PulsedPlayer;
+import fr.nebulo9.pulsedparty.player.TrackedPlayer;
+import fr.nebulo9.pulsedparty.player.TrackingPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,15 +15,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerListener implements Listener {
     private final PulsedParty instance;
-    public static final Map<PulsedPlayer, SimplifiedLocation> COORDINATES_TRACKINGS = new HashMap<>();
-    public static final Map<PulsedPlayer,PulsedPlayer> PLAYER_TRACKINGS = new HashMap<>();
+    public static final ArrayList<TrackingPlayer> TRACKING_PLAYERS = new ArrayList<>();
+    public static final ArrayList<TrackedPlayer> TRACKED_PLAYERS = new ArrayList<>();
 
     public PlayerListener(PulsedParty instance) {
         this.instance = instance;
@@ -55,12 +54,28 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        PulsedPlayer player = new PulsedPlayer(event.getPlayer());
-        if(player.isTracking()) {
+        Player bPlayer = event.getPlayer();
+        PulsedPlayer player = new PulsedPlayer(bPlayer);
+        int trackingIndex = TRACKING_PLAYERS.indexOf(player);
+        int trackedIndex = TRACKED_PLAYERS.indexOf(player);
+        if(trackingIndex > -1) {
+            TrackingPlayer trackingPlayer = TRACKING_PLAYERS.get(trackingIndex);
+            if(trackingPlayer.isTrackingLocation()) {
+                
+            } else if(trackingPlayer.isTrackingPlayer()) {
 
+            }
         }
-        if(player.isTracked()) {
-            
+        if(trackedIndex > -1) {
+            TrackedPlayer trackedPlayer = TRACKED_PLAYERS.get(trackedIndex);
+            TrackingPlayer source = null;
+            for (TrackingPlayer tp : TRACKING_PLAYERS) {
+                if(tp.getUUID().equals(trackedPlayer.getPlayerTracker())) {
+                    source = tp;
+                }
+            }
+            SimplifiedLocation loc = new SimplifiedLocation(bPlayer.getLocation());
+            source.setLocationTarget(loc);
         }
     }
 }

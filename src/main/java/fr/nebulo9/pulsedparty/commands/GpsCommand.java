@@ -5,6 +5,8 @@ import fr.nebulo9.pulsarlib.location.SimplifiedLocation;
 import fr.nebulo9.pulsarlib.message.Message;
 import fr.nebulo9.pulsedparty.events.PlayerListener;
 import fr.nebulo9.pulsedparty.player.PulsedPlayer;
+import fr.nebulo9.pulsedparty.player.TrackedPlayer;
+import fr.nebulo9.pulsedparty.player.TrackingPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -21,11 +23,12 @@ public class GpsCommand extends PLPlayerCommand {
         if(nbArgs == 1) {
             Player target = Bukkit.getPlayer(args[0]);
             if(target != null) {
-                PulsedPlayer source = new PulsedPlayer(player);
-                PulsedPlayer ptarget = new PulsedPlayer(target);
-                source.setTracking(true);
+                TrackingPlayer source = new TrackingPlayer(player);
+                TrackedPlayer ptarget = new TrackedPlayer(target);
+                source.setTrackingPlayer(true);
                 ptarget.setTracked(true);
-                PlayerListener.PLAYER_TRACKINGS.put(source,ptarget);
+                PlayerListener.TRACKING_PLAYERS.add(source);
+                PlayerListener.TRACKED_PLAYERS.add(ptarget);
                 return true;
             }
             Message.playerErrorMessage(player,"This player does not exist or is offline");
@@ -44,8 +47,8 @@ public class GpsCommand extends PLPlayerCommand {
                     return false;
                 }
             }
-            PulsedPlayer source = new PulsedPlayer(player);
-            source.setTracking(true);
+            TrackingPlayer source = new TrackingPlayer(player);
+            source.setTrackingLocation(true);
             World w = player.getWorld();
             double x = coords.get(0);
             double y,z;
@@ -57,7 +60,7 @@ public class GpsCommand extends PLPlayerCommand {
                 y = coords.get(1);
             }
             SimplifiedLocation l = new SimplifiedLocation(w.getName(),x,y,z);
-            PlayerListener.COORDINATES_TRACKINGS.put(source,l);
+            source.setLocationTarget(l);
         }
         return false;
     }
