@@ -6,6 +6,7 @@ import fr.nebulo9.pulsedparty.PulsedParty;
 import fr.nebulo9.pulsedparty.player.PulsedPlayer;
 import fr.nebulo9.pulsedparty.player.TrackedPlayer;
 import fr.nebulo9.pulsedparty.player.TrackingPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -53,6 +55,12 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        PulsedPlayer player = new PulsedPlayer(event.getPlayer());
+        TRACKED_PLAYERS.remove(player);
+    }
+
+    @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player bPlayer = event.getPlayer();
         PulsedPlayer player = new PulsedPlayer(bPlayer);
@@ -60,22 +68,63 @@ public class PlayerListener implements Listener {
         int trackedIndex = TRACKED_PLAYERS.indexOf(player);
         if(trackingIndex > -1) {
             TrackingPlayer trackingPlayer = TRACKING_PLAYERS.get(trackingIndex);
+            SimplifiedLocation trackingPlayerLoc = new SimplifiedLocation(bPlayer.getLocation());
+            Map<String, Double> distMap = trackingPlayerLoc.distance(trackingPlayer.getLocationTarget());
+            String dist = distMap.get("distance").toString();
+            StringBuilder message = new StringBuilder();
             if(trackingPlayer.isTrackingLocation()) {
-                
+                SimplifiedLocation targetLoc = trackingPlayer.getLocationTarget();
+                message.append((int)targetLoc.getX()).append(" ").append((int)targetLoc.getY()).append(" ").append((int)targetLoc.getZ());
             } else if(trackingPlayer.isTrackingPlayer()) {
-
+                Player bTarget = Bukkit.getPlayer(trackingPlayer.getUUID());
+                for (TrackedPlayer tp : TRACKED_PLAYERS) {
+                    if(tp.getUUID().equals(trackingPlayer.getPlayerTarget())) {
+                        message.append(tp.getName());
+                        break;
+                    }
+                }
+                if(bTarget.getWorld().getEnvironment() != bPlayer.getWorld().getEnvironment()) {
+                    distMap = Map.of("distance",0d,"diffX",0d,"diffZ",0d);
+                    dist = "?";
+                }
             }
+            String dir = dir(distMap.get("diffX").intValue(),distMap.get("diffZ").intValue());
+            message.append(dist).append("m").append(dir);
         }
         if(trackedIndex > -1) {
             TrackedPlayer trackedPlayer = TRACKED_PLAYERS.get(trackedIndex);
-            TrackingPlayer source = null;
             for (TrackingPlayer tp : TRACKING_PLAYERS) {
                 if(tp.getUUID().equals(trackedPlayer.getPlayerTracker())) {
-                    source = tp;
+                    SimplifiedLocation loc = new SimplifiedLocation(bPlayer.getLocation());
+                    tp.setLocationTarget(loc);
                 }
             }
-            SimplifiedLocation loc = new SimplifiedLocation(bPlayer.getLocation());
-            source.setLocationTarget(loc);
+
         }
+    }
+
+    public String dir(int diffX, int diffZ) {
+        if(diffX < 0 ) {
+            if(diffZ < 0) {
+                return "🡿";
+            } else if(diffZ > 0) {
+                return "🡼";
+            }
+            return "🡸";
+        } else if(diffX > 0) {
+            if(diffZ < 0) {
+                return "🡾";
+            } else if(diffZ > 0) {
+                return "🡽";
+            }
+            return "🡺";
+        } else {
+            if(diffZ <= 0) {
+                return "🡻";
+            } else if(diffZ > 0) {
+                return "🡹";
+            }
+        }
+        return "🡻";
     }
 }
