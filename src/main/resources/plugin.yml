@@ -12,13 +12,13 @@ commands:
         permission: user.ping
         usage: /ping
     gps:
-        alisases:
+        aliases:
             - track
         description: Track a player or a location
         permission: user.gps
         usage: /<gps|track> <player|[x z]|[x y z]>
     gpsend:
-        alisases:
+        aliases:
             - untrack
             - stoptrack
             - stopgps
