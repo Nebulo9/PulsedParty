@@ -1,8 +1,6 @@
 package fr.nebulo9.pulsedparty.player;
 
 import fr.nebulo9.pulsarlib.location.SimplifiedLocation;
-import fr.nebulo9.pulsarlib.player.PLPlayer;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

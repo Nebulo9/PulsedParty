@@ -4,7 +4,6 @@ import fr.nebulo9.pulsarlib.command.PLPlayerCommand;
 import fr.nebulo9.pulsarlib.location.SimplifiedLocation;
 import fr.nebulo9.pulsarlib.message.Message;
 import fr.nebulo9.pulsedparty.events.PlayerListener;
-import fr.nebulo9.pulsedparty.player.PulsedPlayer;
 import fr.nebulo9.pulsedparty.player.TrackedPlayer;
 import fr.nebulo9.pulsedparty.player.TrackingPlayer;
 import org.bukkit.Bukkit;
@@ -44,7 +43,7 @@ public class GpsCommand extends PLPlayerCommand {
                     coords.add(Integer.parseInt(arg));
                 } catch (NumberFormatException e) {
                     Message.playerErrorMessage(player,"Coordinates must not be decimals numbers");
-                    return false;
+                    return true;
                 }
             }
             TrackingPlayer source = new TrackingPlayer(player);
@@ -61,6 +60,7 @@ public class GpsCommand extends PLPlayerCommand {
             }
             SimplifiedLocation l = new SimplifiedLocation(w.getName(),x,y,z);
             source.setLocationTarget(l);
+            return true;
         }
         return false;
     }

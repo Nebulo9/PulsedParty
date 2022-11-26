@@ -1,4 +1,37 @@
 name: PulsedParty
 version: '${project.version}'
 main: fr.nebulo9.pulsedparty.PulsedParty
-api-version: 1.18
+api-version: 1.19
+commands:
+    privileged:
+        description: Manage the players who can access some features
+        permission: admin.privileged
+        usage: /privileged
+    ping:
+        description: Test your ping
+        permission: user.ping
+        usage: /ping
+    gps:
+        alisases:
+            - track
+        description: Track a player or a location
+        permission: user.gps
+        usage: /<gps|track> <player|[x z]|[x y z]>
+    gpsend:
+        alisases:
+            - untrack
+            - stoptrack
+            - stopgps
+        description: Stop your tracking session
+        usage: /<gpsend|stoptrack|untrack|stopgps>
+        permission: user.gps
+permission:
+    user.ping:
+        description: Ping permission
+        default: true
+    user.gps:
+        description: GPS commands permission
+        default: true
+    admin.*:
+        description: Admin wommands wildcard
+        default: op
