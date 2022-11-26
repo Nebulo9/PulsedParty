@@ -8,10 +8,12 @@ import fr.nebulo9.pulsedparty.player.TrackedPlayer;
 import fr.nebulo9.pulsedparty.player.TrackingPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -57,6 +59,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         PulsedPlayer player = new PulsedPlayer(event.getPlayer());
+        TRACKING_PLAYERS.removeIf(p -> p.getPlayerTarget().equals(player.getUUID()));
         TRACKED_PLAYERS.remove(player);
     }
 
@@ -121,10 +124,9 @@ public class PlayerListener implements Listener {
         } else {
             if(diffZ <= 0) {
                 return "🡻";
-            } else if(diffZ > 0) {
+            } else {
                 return "🡹";
             }
         }
-        return "🡻";
     }
 }
